@@ -1,0 +1,103 @@
+*** Using Compiler 'V5.06 update 5 (build 528)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'APP Target'
+compiling port.c...
+.\freertos\portable\ARM_CM4F\portmacro.h(199): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+.\freertos\portable\ARM_CM4F\portmacro.h(230): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulReturn, ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+freertos\portable\ARM_CM4F\port.c: 0 warnings, 2 errors
+compiling timers.c...
+.\freertos\portable\ARM_CM4F\portmacro.h(199): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+.\freertos\portable\ARM_CM4F\portmacro.h(230): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulReturn, ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+freertos\source\timers.c: 0 warnings, 2 errors
+compiling croutine.c...
+.\freertos\portable\ARM_CM4F\portmacro.h(199): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+.\freertos\portable\ARM_CM4F\portmacro.h(230): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulReturn, ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+freertos\source\croutine.c: 0 warnings, 2 errors
+compiling event_groups.c...
+.\freertos\portable\ARM_CM4F\portmacro.h(199): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+.\freertos\portable\ARM_CM4F\portmacro.h(230): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulReturn, ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+freertos\source\event_groups.c: 0 warnings, 2 errors
+compiling stream_buffer.c...
+.\freertos\portable\ARM_CM4F\portmacro.h(199): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+.\freertos\portable\ARM_CM4F\portmacro.h(230): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulReturn, ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+freertos\source\stream_buffer.c: 0 warnings, 2 errors
+compiling heap_4.c...
+.\freertos\portable\ARM_CM4F\portmacro.h(199): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+.\freertos\portable\ARM_CM4F\portmacro.h(230): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulReturn, ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+freertos\portable\MemMang\heap_4.c: 0 warnings, 2 errors
+compiling list.c...
+.\freertos\portable\ARM_CM4F\portmacro.h(199): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+.\freertos\portable\ARM_CM4F\portmacro.h(230): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulReturn, ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+freertos\source\list.c: 0 warnings, 2 errors
+compiling queue.c...
+.\freertos\portable\ARM_CM4F\portmacro.h(199): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+.\freertos\portable\ARM_CM4F\portmacro.h(230): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulReturn, ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+freertos\source\queue.c: 0 warnings, 2 errors
+compiling tasks.c...
+.\freertos\portable\ARM_CM4F\portmacro.h(199): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+.\freertos\portable\ARM_CM4F\portmacro.h(230): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulReturn, ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+freertos\source\tasks.c: 0 warnings, 2 errors
+compiling delay.c...
+.\freertos\portable\ARM_CM4F\portmacro.h(199): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+.\freertos\portable\ARM_CM4F\portmacro.h(230): error:  #20: identifier "__NVIC_PRIO_BITS" is undefined
+      uint32_t ulReturn, ulNewBASEPRI = 
+onfigMAX_SYSCALL_INTERRUPT_PRIORITY;
+User\delay.c: 0 warnings, 2 errors
+compiling i2c.c...
+compiling max30102.c...
+compiling EM7028.c...
+compiling main.c...
+compiling ota_update.c...
+compiling ADC_battery.c...
+compiling bme280.c...
+compiling ds3231.c...
+compiling motor.c...
+compiling timer.c...
+compiling Key.c...
+compiling mpu6050.c...
+compiling oled_clock.c...
+User\OLED\oled_clock.c(254): warning:  #870-D: invalid multibyte character sequence
+  	OLED_ShowString(20, 40, "è¡€æ°?:", OLED_8X16);
+User\OLED\oled_clock.c(264): warning:  #870-D: invalid multibyte character sequence
+  	OLED_ShowString(20, 40, "è¡€æ°?:", OLED_8X16);
+User\OLED\oled_clock.c: 2 warnings, 0 errors
+".\Objects\APP\app.axf" - 20 Error(s), 2 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:03

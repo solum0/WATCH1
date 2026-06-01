@@ -1,0 +1,10 @@
+--cpu=Cortex-M4.fp.sp
+".\objects\bootloader\system_stm32f4xx.o"
+".\objects\bootloader\stm32f4xx_it.o"
+".\objects\bootloader\startup_stm32f411xe.o"
+".\objects\bootloader\boot_main.o"
+".\objects\bootloader\stm32f4xx_flash.o"
+--library_type=microlib --strict --scatter ".\Objects\Bootloader\bootloader.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\Bootloader\bootloader.map" -o .\Objects\Bootloader\bootloader.axf

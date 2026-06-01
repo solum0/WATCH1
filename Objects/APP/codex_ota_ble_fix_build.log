@@ -1,0 +1,9 @@
+*** Using Compiler 'V5.06 update 5 (build 528)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'APP Target'
+compiling ota_update.c...
+linking...
+Program Size: Code=37392 RO-data=6708 RW-data=444 ZI-data=43940  
+FromELF: creating hex file...
+After Build - User command #1: fromelf --bin --output=.\Objects\APP\app.bin .\Objects\APP\app.axf
+".\Objects\APP\app.axf" - 0 Error(s), 0 Warning(s).
+Build Time Elapsed:  00:00:03

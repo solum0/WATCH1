@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "timer.h": "c",
+        "freertos.h": "c",
+        "task.h": "c",
+        "semphr.h": "c",
+        "queue.h": "c",
+        "timers.h": "c",
+        "mpu6050.h": "c",
+        "max30102.h": "c"
+    },
+    "C_Cpp.default.configurationProvider": "",
+    "C_Cpp.default.compilerPath": "C:/Keil_v5/ARM/ARMCC/Bin/armcc.exe",
+    "cmake.sourceDirectory": "D:/SSTM32/F411/WATCH/freertos/include"
+}
