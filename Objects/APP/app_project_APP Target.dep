@@ -1234,10 +1234,11 @@ F (.\Start\core_cmSimd.h)(0x68C7DD84)()
 F (.\Start\core_sc000.h)(0x68C7DD84)()
 F (.\Start\core_sc300.h)(0x693FB06C)()
 F (.\Start\startup_stm32f411xe.s)(0x68C7DD7D)(--cpu Cortex-M4.fp.sp -g --apcs=interwork --pd "__MICROLIB SETA 1"--pd "__UVISION_VERSION SETA 539" --pd "STM32F411xE SETA 1"--list .\listings\app\startup_stm32f411xe.lst --xref -o .\objects\app\startup_stm32f411xe.o --depend .\objects\app\startup_stm32f411xe.d)
-F (.\User\main.c)(0x6A12FCEE)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\main.o --omf_browse .\objects\app\main.crf --depend .\objects\app\main.d)
+F (.\User\main.c)(0x6A1E8414)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\main.o --omf_browse .\objects\app\main.crf --depend .\objects\app\main.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x588B8344)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x68A7E857)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
+I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x588B8344)
 I (.\CMSIS\stm32f4xx.h)(0x69B688DF)
 I (.\CMSIS\core_cm4.h)(0x68C7DD84)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588B8344)
@@ -1266,7 +1267,7 @@ I (.\Library\inc\stm32f4xx_usart.h)(0x68C7DD84)
 I (.\Library\inc\stm32f4xx_wwdg.h)(0x68C7DD84)
 I (.\Library\inc\misc.h)(0x68C7DD84)
 I (.\Library\inc\stm32f4xx_flash_ramfunc.h)(0x68C7DD84)
-I (.\User\UART\usart.h)(0x69B58737)
+I (.\User\UART\usart.h)(0x6A1E28EC)
 I (.\User\OLED\oled.h)(0x69183DC3)
 I (.\User\OLED\OLED_Data.h)(0x6943F762)
 I (.\User\DS3231\ds3231.h)(0x69F60287)
@@ -1285,25 +1286,26 @@ I (.\User\OLED\oled_clock.h)(0x69528E34)
 I (.\User\OLED\oled_font.h)(0x69F34506)
 I (.\User\BME280\bme280.h)(0x694F7DF0)
 I (.\User\i2c.h)(0x68D2A628)
-I (.\User\KEY\key.h)(0x692BCB14)
+I (.\User\KEY\key.h)(0x6A1E6A12)
 I (.\User\delay.h)(0x68D387AE)
 I (.\User\MOTOR\motor.h)(0x69F448BB)
 I (.\User\TIM\timer.h)(0x69B5874C)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x588B8344)
 I (User\EM7028/EM7028.h)(0x6A07D593)
 I (User\max30102.h)(0x694FC5DE)
-I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x588B8344)
-I (.\User\MPU6050\mpu6050.h)(0x69528F50)
+I (.\User\MPU6050\mpu6050.h)(0x6A1E6BC3)
 I (.\freertos\include\queue.h)(0x68798428)
 I (.\User\Battery\ADC_battery.h)(0x69BFD111)
 I (User\boot_confirm.h)(0x6A031417)
-I (User\ota_update.h)(0x6A09CEBB)
+I (User\ota_update.h)(0x6A1E6982)
 I (User\MCU_Debug/MCU_Debug.h)(0x6A088B96)
 I (.\freertos\include\semphr.h)(0x68798428)
 I (.\freertos\include\timers.h)(0x68798428)
-F (.\User\boot_confirm.c)(0x6A032D18)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\boot_confirm.o --omf_browse .\objects\app\boot_confirm.crf --depend .\objects\app\boot_confirm.d)
-I (.\Bootloader\boot_shared.h)(0x6A032EBB)
+I (.\freertos\include\event_groups.h)(0x68798428)
+F (.\User\boot_confirm.c)(0x6A1E387A)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\boot_confirm.o --omf_browse .\objects\app\boot_confirm.crf --depend .\objects\app\boot_confirm.d)
+I (.\Bootloader\boot_shared.h)(0x6A1E384B)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588B8344)
+I (User\app_version.h)(0x6A1E84E9)
 I (.\Library\inc\stm32f4xx_flash.h)(0x68C7DD84)
 I (.\CMSIS\stm32f4xx.h)(0x69B688DF)
 I (.\CMSIS\core_cm4.h)(0x68C7DD84)
@@ -1332,10 +1334,11 @@ I (.\Library\inc\stm32f4xx_wwdg.h)(0x68C7DD84)
 I (.\Library\inc\misc.h)(0x68C7DD84)
 I (.\Library\inc\stm32f4xx_flash_ramfunc.h)(0x68C7DD84)
 F (.\User\boot_confirm.h)(0x6A031417)()
-F (.\User\ota_update.c)(0x6A09DD0E)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\ota_update.o --omf_browse .\objects\app\ota_update.crf --depend .\objects\app\ota_update.d)
-I (User\ota_update.h)(0x6A09CEBB)
+F (.\User\ota_update.c)(0x6A1E8018)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\ota_update.o --omf_browse .\objects\app\ota_update.crf --depend .\objects\app\ota_update.d)
+I (User\ota_update.h)(0x6A1E6982)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588B8344)
-I (.\Bootloader\boot_shared.h)(0x6A032EBB)
+I (User\app_version.h)(0x6A1E84E9)
+I (.\Bootloader\boot_shared.h)(0x6A1E384B)
 I (.\CMSIS\stm32f4xx.h)(0x69B688DF)
 I (.\CMSIS\core_cm4.h)(0x68C7DD84)
 I (.\Start\core_cmInstr.h)(0x68C7DD84)
@@ -1363,7 +1366,7 @@ I (.\Library\inc\stm32f4xx_usart.h)(0x68C7DD84)
 I (.\Library\inc\stm32f4xx_wwdg.h)(0x68C7DD84)
 I (.\Library\inc\misc.h)(0x68C7DD84)
 I (.\Library\inc\stm32f4xx_flash_ramfunc.h)(0x68C7DD84)
-I (.\User\UART\usart.h)(0x69B58737)
+I (.\User\UART\usart.h)(0x6A1E28EC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x68A7E857)
 I (.\freertos\include\FreeRTOS.h)(0x68798428)
 I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x588B8344)
@@ -1375,7 +1378,7 @@ I (.\freertos\portable\ARM_CM4F\portmacro.h)(0x6879842C)
 I (.\freertos\include\mpu_wrappers.h)(0x68798428)
 I (.\freertos\include\task.h)(0x68798428)
 I (.\freertos\include\list.h)(0x68798428)
-F (.\User\ota_update.h)(0x6A09CEBB)()
+F (.\User\ota_update.h)(0x6A1E6982)()
 F (.\User\delay.c)(0x68D387C2)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\delay.o --omf_browse .\objects\app\delay.crf --depend .\objects\app\delay.d)
 I (User\delay.h)(0x68D387AE)
 I (.\freertos\include\FreeRTOS.h)(0x68798428)
@@ -1416,7 +1419,7 @@ I (.\Library\inc\stm32f4xx_usart.h)(0x68C7DD84)
 I (.\Library\inc\stm32f4xx_wwdg.h)(0x68C7DD84)
 I (.\Library\inc\misc.h)(0x68C7DD84)
 I (.\Library\inc\stm32f4xx_flash_ramfunc.h)(0x68C7DD84)
-I (.\User\UART\usart.h)(0x69B58737)
+I (.\User\UART\usart.h)(0x6A1E28EC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x68A7E857)
 F (.\User\i2c.c)(0x68D2C320)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\i2c.o --omf_browse .\objects\app\i2c.crf --depend .\objects\app\i2c.d)
 I (User\i2c.h)(0x68D2A628)
@@ -1459,7 +1462,7 @@ I (.\freertos\include\mpu_wrappers.h)(0x68798428)
 I (.\freertos\include\task.h)(0x68798428)
 I (.\freertos\include\list.h)(0x68798428)
 I (User\delay.h)(0x68D387AE)
-I (.\User\UART\usart.h)(0x69B58737)
+I (.\User\UART\usart.h)(0x6A1E28EC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x68A7E857)
 F (.\User\max30102.c)(0x694FCA24)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\max30102.o --omf_browse .\objects\app\max30102.crf --depend .\objects\app\max30102.d)
 I (User\max30102.h)(0x694FC5DE)
@@ -1504,7 +1507,7 @@ I (.\freertos\portable\ARM_CM4F\portmacro.h)(0x6879842C)
 I (.\freertos\include\mpu_wrappers.h)(0x68798428)
 I (.\freertos\include\task.h)(0x68798428)
 I (.\freertos\include\list.h)(0x68798428)
-I (.\User\KEY\key.h)(0x692BCB14)
+I (.\User\KEY\key.h)(0x6A1E6A12)
 I (User\hi2c.h)(0x694559A6)
 I (User\i2c.h)(0x68D2A628)
 F (.\User\delay.h)(0x68D387AE)()
@@ -1541,6 +1544,7 @@ I (.\Library\inc\stm32f4xx_wwdg.h)(0x68C7DD84)
 I (.\Library\inc\misc.h)(0x68C7DD84)
 I (.\Library\inc\stm32f4xx_flash_ramfunc.h)(0x68C7DD84)
 F (.\User\hi2c.h)(0x694559A6)()
+F (.\User\app_version.h)(0x6A1E84E9)()
 F (.\freertos\portable\ARM_CM4F\port.c)(0x6879842C)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\port.o --omf_browse .\objects\app\port.crf --depend .\objects\app\port.d)
 I (.\freertos\include\FreeRTOS.h)(0x68798428)
 I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x588B8344)
@@ -1887,11 +1891,11 @@ I (.\freertos\include\task.h)(0x68798428)
 I (.\freertos\include\list.h)(0x68798428)
 I (.\User\hi2c.h)(0x694559A6)
 I (.\User\i2c.h)(0x68D2A628)
-I (.\User\UART\usart.h)(0x69B58737)
+I (.\User\UART\usart.h)(0x6A1E28EC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x68A7E857)
 F (.\User\DS3231\ds3231.h)(0x69F60287)()
-F (.\User\KEY\Key.c)(0x69F605F5)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\key.o --omf_browse .\objects\app\key.crf --depend .\objects\app\key.d)
-I (User\KEY\key.h)(0x692BCB14)
+F (.\User\KEY\Key.c)(0x6A1E6A6D)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\key.o --omf_browse .\objects\app\key.crf --depend .\objects\app\key.d)
+I (User\KEY\key.h)(0x6A1E6A12)
 I (.\CMSIS\stm32f4xx.h)(0x69B688DF)
 I (.\CMSIS\core_cm4.h)(0x68C7DD84)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588B8344)
@@ -1939,7 +1943,7 @@ I (.\User\hi2c.h)(0x694559A6)
 I (.\freertos\include\semphr.h)(0x68798428)
 I (.\freertos\include\queue.h)(0x68798428)
 I (.\freertos\include\timers.h)(0x68798428)
-F (.\User\KEY\Key.h)(0x692BCB14)()
+F (.\User\KEY\Key.h)(0x6A1E6A12)()
 F (.\User\MOTOR\motor.c)(0x69F448D6)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\motor.o --omf_browse .\objects\app\motor.crf --depend .\objects\app\motor.d)
 I (User\MOTOR\motor.h)(0x69F448BB)
 I (.\CMSIS\stm32f4xx.h)(0x69B688DF)
@@ -1983,8 +1987,8 @@ I (.\freertos\include\list.h)(0x68798428)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x588B8344)
 I (.\User\delay.h)(0x68D387AE)
 F (.\User\MOTOR\motor.h)(0x69F448BB)()
-F (.\User\MPU6050\mpu6050.c)(0x6953C9B8)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\mpu6050.o --omf_browse .\objects\app\mpu6050.crf --depend .\objects\app\mpu6050.d)
-I (User\MPU6050\mpu6050.h)(0x69528F50)
+F (.\User\MPU6050\mpu6050.c)(0x6A1E6C76)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\mpu6050.o --omf_browse .\objects\app\mpu6050.crf --depend .\objects\app\mpu6050.d)
+I (User\MPU6050\mpu6050.h)(0x6A1E6BC3)
 I (.\CMSIS\stm32f4xx.h)(0x69B688DF)
 I (.\CMSIS\core_cm4.h)(0x68C7DD84)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588B8344)
@@ -2028,9 +2032,9 @@ I (.\User\hi2c.h)(0x694559A6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x588B8344)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x588B8344)
-I (.\User\UART\usart.h)(0x69B58737)
+I (.\User\UART\usart.h)(0x6A1E28EC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x68A7E857)
-F (.\User\MPU6050\mpu6050.h)(0x69528F50)()
+F (.\User\MPU6050\mpu6050.h)(0x6A1E6BC3)()
 F (.\User\OLED\OLED.c)(0x692536F0)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\oled.o --omf_browse .\objects\app\oled.crf --depend .\objects\app\oled.d)
 I (.\CMSIS\stm32f4xx.h)(0x69B688DF)
 I (.\CMSIS\core_cm4.h)(0x68C7DD84)
@@ -2183,9 +2187,9 @@ I (.\Library\inc\misc.h)(0x68C7DD84)
 I (.\Library\inc\stm32f4xx_flash_ramfunc.h)(0x68C7DD84)
 I (.\User\OLED\oled.h)(0x69183DC3)
 I (.\User\OLED\OLED_Data.h)(0x6943F762)
-I (.\User\UART\usart.h)(0x69B58737)
+I (.\User\UART\usart.h)(0x6A1E28EC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x68A7E857)
-I (.\User\MPU6050\mpu6050.h)(0x69528F50)
+I (.\User\MPU6050\mpu6050.h)(0x6A1E6BC3)
 I (.\freertos\include\FreeRTOS.h)(0x68798428)
 I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x588B8344)
 I (.\freertos\RTOS\FreeRTOSConfig.h)(0x6A07D86D)
@@ -2200,8 +2204,8 @@ I (.\freertos\include\queue.h)(0x68798428)
 I (.\User\hi2c.h)(0x694559A6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
 F (.\User\TIM\timer.h)(0x69B5874C)()
-F (.\User\UART\usart.c)(0x6A044FB1)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\usart.o --omf_browse .\objects\app\usart.crf --depend .\objects\app\usart.d)
-I (User\UART\usart.h)(0x69B58737)
+F (.\User\UART\usart.c)(0x6A1E28EC)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\usart.o --omf_browse .\objects\app\usart.crf --depend .\objects\app\usart.d)
+I (User\UART\usart.h)(0x6A1E28EC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x68A7E857)
 I (.\CMSIS\stm32f4xx.h)(0x69B688DF)
 I (.\CMSIS\core_cm4.h)(0x68C7DD84)
@@ -2231,9 +2235,9 @@ I (.\Library\inc\stm32f4xx_usart.h)(0x68C7DD84)
 I (.\Library\inc\stm32f4xx_wwdg.h)(0x68C7DD84)
 I (.\Library\inc\misc.h)(0x68C7DD84)
 I (.\Library\inc\stm32f4xx_flash_ramfunc.h)(0x68C7DD84)
-I (.\User\ota_update.h)(0x6A09CEBB)
+I (.\User\ota_update.h)(0x6A1E6982)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x588B8344)
-F (.\User\UART\usart.h)(0x69B58737)()
+F (.\User\UART\usart.h)(0x6A1E28EC)()
 F (.\User\MCU_Debug\MCU_Debug.c)(0x6A088C40)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\CMSIS -I .\Library\inc -I .\Library\src -I .\Start -I .\Objects -I .\freertos\include -I .\freertos\portable\ARM_CM4F -I .\freertos\portable\MemMang -I .\freertos\RTOS -I .\freertos\source -I .\User\EM7028 -I .\User\Battery -I .\User\BME280 -I .\User\DS3231 -I .\User\KEY -I .\User\MOTOR -I .\User\MPU6050 -I .\User\OLED -I .\User\TIM -I .\User\UART -I .\User -I .\Bootloader -I .\User\MCU_Debug --no-multibyte-chars-D__UVISION_VERSION="539" -DSTM32F411xE -DSTM32F411xE -DUSE_STDPERIPH_DRIVER -D__FPU_PRESENT="1" -D__FPU_USED="1" -DAPP_BUILD-o .\objects\app\mcu_debug.o --omf_browse .\objects\app\mcu_debug.crf --depend .\objects\app\mcu_debug.d)
 I (.\CMSIS\stm32f4xx.h)(0x69B688DF)
 I (.\CMSIS\core_cm4.h)(0x68C7DD84)
@@ -2263,6 +2267,6 @@ I (.\Library\inc\stm32f4xx_usart.h)(0x68C7DD84)
 I (.\Library\inc\stm32f4xx_wwdg.h)(0x68C7DD84)
 I (.\Library\inc\misc.h)(0x68C7DD84)
 I (.\Library\inc\stm32f4xx_flash_ramfunc.h)(0x68C7DD84)
-I (.\User\UART\usart.h)(0x69B58737)
+I (.\User\UART\usart.h)(0x6A1E28EC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x68A7E857)
 F (.\User\MCU_Debug\MCU_Debug.h)(0x6A088B96)()

@@ -1,6 +1,7 @@
 .\objects\app\boot_confirm.o: User\boot_confirm.c
 .\objects\app\boot_confirm.o: .\Bootloader\boot_shared.h
 .\objects\app\boot_confirm.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\app\boot_confirm.o: User\app_version.h
 .\objects\app\boot_confirm.o: .\Library\inc\stm32f4xx_flash.h
 .\objects\app\boot_confirm.o: .\CMSIS\stm32f4xx.h
 .\objects\app\boot_confirm.o: .\CMSIS\core_cm4.h

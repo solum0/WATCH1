@@ -26,6 +26,7 @@ void Key_Init(void);                   // 按键初始化函数
 uint8_t Key_GetNum(void);              // 轮询方式获取按键值函数
 uint8_t GetKeyNum(void);               // 中断方式获取按键值函数
 
+void Key_SetSleepLock(uint8_t locked);
 void power_switch_init(void);
 void Enter_Standby_Mode(void);
 #endif

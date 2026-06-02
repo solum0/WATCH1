@@ -1,4 +1,5 @@
 #include "boot_shared.h"
+#include "app_version.h"
 #include "stm32f4xx_flash.h"
 #include <stdint.h>
 
@@ -70,8 +71,13 @@ uint8_t AppBoot_ConfirmIfTrial(void)
         return 0U;
     }
 
+    if (meta.image_version != APP_FW_VERSION) {
+        return 0U;
+    }
+
     /* 确认成功后清零 boot_count，下次启动 Bootloader 会直接跳转 APP，不再回滚。 */
     meta.state = BOOT_FLAG_CONFIRMED;
     meta.boot_count = 0U;
+    meta.reserved[BOOT_META_CONFIRMED_VERSION_INDEX] = APP_FW_VERSION;
     return (uint8_t)AppBoot_WriteMeta(&meta);
 }

@@ -55,6 +55,7 @@ void mpu6050_init(void);
 void MPU6050_Proc(void); // 在FreeRTOS任务中调用此函数
 
 //抬腕算法
+void MPU6050_SetWakeLock(uint8_t locked);
 void detect_wrist_gesture(void);
 
 // 数据获取接口

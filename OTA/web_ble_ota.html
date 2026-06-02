@@ -125,6 +125,17 @@
       color: var(--muted);
     }
 
+    .field-block {
+      display: grid;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .field-label {
+      display: block;
+    }
+
     input,
     select {
       width: 100%;
@@ -139,6 +150,22 @@
 
     input[type="file"] {
       padding: 7px;
+    }
+
+    input[readonly] {
+      background: #f3f6f7;
+      color: var(--muted);
+    }
+
+    .version-editor {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(140px, 1.2fr);
+      gap: 8px;
+      align-items: end;
+    }
+
+    .version-editor label {
+      gap: 4px;
     }
 
     .checkbox-label {
@@ -318,6 +345,7 @@
 
       .grid,
       .form-grid,
+      .version-editor,
       .metrics {
         grid-template-columns: 1fr;
       }
@@ -346,13 +374,30 @@
             APP bin 文件
             <input id="fileInput" type="file" accept=".bin,application/octet-stream">
           </label>
-          <label>
-            固件版本
-            <input id="versionInput" type="number" min="0" max="4294967295" step="1" value="1">
-          </label>
+          <div class="field-block full">
+            <span class="field-label">固件版本</span>
+            <div class="version-editor">
+              <label>
+                Major
+                <input id="versionMajorInput" type="number" min="0" max="255" step="1" value="0">
+              </label>
+              <label>
+                Minor
+                <input id="versionMinorInput" type="number" min="0" max="255" step="1" value="3">
+              </label>
+              <label>
+                Patch
+                <input id="versionPatchInput" type="number" min="0" max="255" step="1" value="10">
+              </label>
+              <label>
+                发送版本码
+                <input id="versionCodeInput" type="text" value="0x0000030A" readonly>
+              </label>
+            </div>
+          </div>
           <label>
             数据 payload 字节数
-            <input id="payloadSizeInput" type="number" min="1" max="820" step="1" value="64">
+            <input id="payloadSizeInput" type="number" min="1" max="480" step="1" value="64">
           </label>
           <label>
             ACK 超时 ms
@@ -475,6 +520,7 @@
     "use strict";
 
     const DOWNLOAD_MAX_SIZE = 0x20000;
+    const DEVICE_MAX_PAYLOAD_SIZE = 480;
     const FRAME_START = 0x01;
     const FRAME_DATA = 0x02;
     const FRAME_END = 0x03;
@@ -483,7 +529,9 @@
     const COMPAT_MIN_WRITE_SIZE = 14;
     const COMPAT_MIN_PAYLOAD_SIZE = 16;
     const COMPAT_TAIL_PAD_SIZE = 8;
-    const COMPAT_TAIL_PAD_GUARD_WRITES = 1;
+    const COMPAT_TAIL_GUARD_INITIAL = 32;
+    const COMPAT_TAIL_GUARD_MAX = 128;
+    const COMPAT_TAIL_GUARD_STABLE_FRAMES = 32;
     const FRAME_TAIL_PAD = 0x55;
     const RX_TIMEOUT_STATUS = 9;
     const ACK_STATUS_NAMES = {
@@ -510,7 +558,10 @@
 
     const els = {
       file: document.getElementById("fileInput"),
-      version: document.getElementById("versionInput"),
+      versionMajor: document.getElementById("versionMajorInput"),
+      versionMinor: document.getElementById("versionMinorInput"),
+      versionPatch: document.getElementById("versionPatchInput"),
+      versionCode: document.getElementById("versionCodeInput"),
       payloadSize: document.getElementById("payloadSizeInput"),
       ackTimeout: document.getElementById("ackTimeoutInput"),
       retry: document.getElementById("retryInput"),
@@ -566,7 +617,9 @@
         chunkSize: COMPAT_SAFE_WRITE_SIZE,
         chunkDelayMs: 20,
         ackDelayMs: 150,
-        tailPadSize: COMPAT_TAIL_PAD_SIZE
+        tailPadSize: COMPAT_TAIL_PAD_SIZE,
+        tailGuardBytes: COMPAT_TAIL_GUARD_INITIAL,
+        tailGuardOkFrames: 0
       }
     };
 
@@ -663,6 +716,44 @@
         return fallback;
       }
       return Math.trunc(value);
+    }
+
+    function readByteInput(input, name) {
+      const value = Number(input.value);
+      if (!Number.isInteger(value) || value < 0 || value > 255) {
+        throw new Error(`${name} 必须在 0 到 255 之间`);
+      }
+      return value;
+    }
+
+    function readFirmwareVersion() {
+      const major = readByteInput(els.versionMajor, "Major");
+      const minor = readByteInput(els.versionMinor, "Minor");
+      const patch = readByteInput(els.versionPatch, "Patch");
+      const code = ((major << 16) | (minor << 8) | patch) >>> 0;
+
+      if (code === 0) {
+        throw new Error("固件版本不能是 0.0.0");
+      }
+
+      return {
+        major,
+        minor,
+        patch,
+        code,
+        text: `${major}.${minor}.${patch}`
+      };
+    }
+
+    function updateVersionCodePreview() {
+      try {
+        const version = readFirmwareVersion();
+        els.versionCode.value = hex32(version.code);
+        els.versionCode.title = `发送版本 ${version.text}`;
+      } catch (error) {
+        els.versionCode.value = "无效";
+        els.versionCode.title = error.message;
+      }
     }
 
     function sleep(ms) {
@@ -975,6 +1066,16 @@
       return `type=${ack.type} status=${ackStatusName(ack.status)} seq=${ack.seq} offset=${ack.offset}${formatAckDiag(ack.diag)}`;
     }
 
+    function ackStoppedNearFrameTail(ack) {
+      if (!ack || !ack.diag || ack.status !== RX_TIMEOUT_STATUS) {
+        return false;
+      }
+      if (!ack.diag.rxExpected || ack.diag.rxIndex >= ack.diag.rxExpected) {
+        return false;
+      }
+      return (ack.diag.rxExpected - ack.diag.rxIndex) <= COMPAT_TAIL_GUARD_MAX;
+    }
+
     function formatNotifyValue(value) {
       const bytes = new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
       const hex = formatBytes(bytes);
@@ -1190,7 +1291,7 @@
 
       const remainder = frameLength % chunkSize;
       const alignPadSize = remainder === 0 ? 0 : chunkSize - remainder;
-      const guardPadSize = chunkSize * COMPAT_TAIL_PAD_GUARD_WRITES;
+      const guardPadSize = Math.min(state.tx.tailGuardBytes, COMPAT_TAIL_GUARD_MAX);
       return Math.max(basePadSize, alignPadSize + guardPadSize);
     }
 
@@ -1204,6 +1305,41 @@
       bytes.set(frame, 0);
       bytes.fill(FRAME_TAIL_PAD, frame.length);
       return bytes;
+    }
+
+    function increaseTailGuard(reason) {
+      if (state.tx.tailPadSize <= 0) {
+        return false;
+      }
+
+      const currentGuard = state.tx.tailGuardBytes;
+      const nextGuard = Math.min(Math.max(currentGuard * 2, COMPAT_TAIL_GUARD_INITIAL), COMPAT_TAIL_GUARD_MAX);
+      state.tx.tailGuardOkFrames = 0;
+      if (nextGuard === currentGuard) {
+        return false;
+      }
+
+      state.tx.tailGuardBytes = nextGuard;
+      log(`${reason}，尾部保护增加到 ${nextGuard}B`);
+      return true;
+    }
+
+    function noteTailGuardSuccess(type) {
+      if (state.tx.tailPadSize <= 0 || type !== FRAME_DATA || state.tx.tailGuardBytes <= COMPAT_TAIL_GUARD_INITIAL) {
+        return;
+      }
+
+      state.tx.tailGuardOkFrames++;
+      if (state.tx.tailGuardOkFrames < COMPAT_TAIL_GUARD_STABLE_FRAMES) {
+        return;
+      }
+
+      const nextGuard = Math.max(COMPAT_TAIL_GUARD_INITIAL, Math.floor(state.tx.tailGuardBytes / 2));
+      if (nextGuard !== state.tx.tailGuardBytes) {
+        state.tx.tailGuardBytes = nextGuard;
+        log(`连续 ${COMPAT_TAIL_GUARD_STABLE_FRAMES} 个 DATA ACK OK，尾部保护回落到 ${nextGuard}B`);
+      }
+      state.tx.tailGuardOkFrames = 0;
     }
 
     function lowerTransferRate(reason) {
@@ -1242,7 +1378,7 @@
           const txFrame = appendTailPadding(frame);
           const actualTailPadSize = txFrame.length - frame.length;
           if (attempt === 0 && (type !== FRAME_DATA || seq === 0 || (seq % 64) === 0)) {
-            log(`${description} frame=${frame.length} tailPad=${actualTailPadSize} writeChunk=${state.tx.chunkSize} chunkDelay=${state.tx.chunkDelayMs}`);
+            log(`${description} frame=${frame.length} tailPad=${actualTailPadSize} guard=${state.tx.tailGuardBytes} writeChunk=${state.tx.chunkSize} chunkDelay=${state.tx.chunkDelayMs}`);
           }
           const ackPromise = waitForAck(type, seq, timeoutMs);
           await writeBytes(txFrame);
@@ -1250,7 +1386,9 @@
           let ack = await ackPromise;
           if (ack.status !== 0) {
             if (ack.status === RX_TIMEOUT_STATUS) {
-              lowerTransferRate(`${description} 收到 RX_TIMEOUT`);
+              if (!ackStoppedNearFrameTail(ack) || !increaseTailGuard(`${description} 收到 RX_TIMEOUT ${formatAckDiag(ack)}`)) {
+                lowerTransferRate(`${description} 收到 RX_TIMEOUT`);
+              }
               const replacementAck = await waitForReplacementOkAck(type, seq, Math.min(800, timeoutMs));
               if (replacementAck) {
                 ack = replacementAck;
@@ -1268,6 +1406,7 @@
             state.retryCount++;
             log(`${description} 重试成功 attempt=${attempt + 1} elapsed=${Math.round(ack.elapsedMs || 0)} ms ${formatAck(ack)}`);
           }
+          noteTailGuardSuccess(type);
           if (ackDelayMs > 0) {
             await sleep(ackDelayMs);
           }
@@ -1366,8 +1505,8 @@
       }
 
       let payloadSize = readUintInput(els.payloadSize, 64);
-      if (payloadSize <= 0 || payloadSize > 820) {
-        throw new Error("payload 字节数必须在 1 到 820 之间");
+      if (payloadSize <= 0 || payloadSize > DEVICE_MAX_PAYLOAD_SIZE) {
+        throw new Error(`payload 字节数必须在 1 到 ${DEVICE_MAX_PAYLOAD_SIZE} 之间`);
       }
 
       const writeChunkSize = readUintInput(els.writeChunk, COMPAT_SAFE_WRITE_SIZE);
@@ -1377,7 +1516,7 @@
         throw new Error("单 BLE 写包兼容模式要求 Write chunk bytes 至少为 14");
       }
 
-      const version = readUintInput(els.version, 1) >>> 0;
+      const version = readFirmwareVersion();
       const bytes = state.fileBytes;
       const imageCrc = state.imageCrc >>> 0;
       let seq = 0;
@@ -1389,13 +1528,15 @@
       state.tx.chunkDelayMs = chunkDelayMs;
       state.tx.ackDelayMs = ackDelayMs;
       state.tx.tailPadSize = els.compatMode.checked ? COMPAT_TAIL_PAD_SIZE : 0;
+      state.tx.tailGuardBytes = els.compatMode.checked ? COMPAT_TAIL_GUARD_INITIAL : 0;
+      state.tx.tailGuardOkFrames = 0;
       updateProgress(0);
       setControls();
 
       try {
         throwIfStopRequested();
-        log(`START image_size=${bytes.length} image_crc=${hex32(imageCrc)} version=${version} payload=${payloadSize}`);
-        await sendWithAck(buildStartFrame(bytes.length, imageCrc, version, payloadSize), FRAME_START, null, "START");
+        log(`START image_size=${bytes.length} image_crc=${hex32(imageCrc)} version=${version.text}(${hex32(version.code)}) payload=${payloadSize}`);
+        await sendWithAck(buildStartFrame(bytes.length, imageCrc, version.code, payloadSize), FRAME_START, null, "START");
 
         for (let offset = 0; offset < bytes.length;) {
           throwIfStopRequested();
@@ -1479,8 +1620,12 @@
     els.serviceUuid.addEventListener("change", saveCurrentUuidHistories);
     els.writeUuid.addEventListener("change", saveCurrentUuidHistories);
     els.notifyUuid.addEventListener("change", saveCurrentUuidHistories);
+    els.versionMajor.addEventListener("input", updateVersionCodePreview);
+    els.versionMinor.addEventListener("input", updateVersionCodePreview);
+    els.versionPatch.addEventListener("input", updateVersionCodePreview);
 
     loadUuidHistories();
+    updateVersionCodePreview();
     setControls();
     log("页面已加载。Web Bluetooth 需要 HTTPS 或 localhost，并且连接按钮必须由点击触发。");
   </script>

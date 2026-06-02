@@ -1,6 +1,7 @@
 .\objects\app\ota_update.o: User\ota_update.c
 .\objects\app\ota_update.o: User\ota_update.h
 .\objects\app\ota_update.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\app\ota_update.o: User\app_version.h
 .\objects\app\ota_update.o: .\Bootloader\boot_shared.h
 .\objects\app\ota_update.o: .\CMSIS\stm32f4xx.h
 .\objects\app\ota_update.o: .\CMSIS\core_cm4.h

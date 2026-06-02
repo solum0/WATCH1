@@ -2,6 +2,7 @@
 .\objects\app\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\app\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\app\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\app\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\app\main.o: .\CMSIS\stm32f4xx.h
 .\objects\app\main.o: .\CMSIS\core_cm4.h
 .\objects\app\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
@@ -57,7 +58,6 @@
 .\objects\app\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 .\objects\app\main.o: User\EM7028/EM7028.h
 .\objects\app\main.o: User\max30102.h
-.\objects\app\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\app\main.o: .\User\MPU6050\mpu6050.h
 .\objects\app\main.o: .\freertos\include\queue.h
 .\objects\app\main.o: .\User\Battery\ADC_battery.h
@@ -66,3 +66,4 @@
 .\objects\app\main.o: User\MCU_Debug/MCU_Debug.h
 .\objects\app\main.o: .\freertos\include\semphr.h
 .\objects\app\main.o: .\freertos\include\timers.h
+.\objects\app\main.o: .\freertos\include\event_groups.h

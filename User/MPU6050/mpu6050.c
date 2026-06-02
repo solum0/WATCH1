@@ -25,6 +25,7 @@ static uint8_t is_above_baseline = 0;        // 状态标志：是否处于波�
 // 3. 计步计数
 volatile uint16_t step_numbers = 0; // 步数
 static uint32_t last_step_time = 0;
+static volatile uint8_t g_mpu6050_wake_locked = 0U;
 
 // ================= 抬腕检测变量 =================
 volatile uint8_t is_wrist_lifted = 0; // 全局标志位
@@ -204,8 +205,17 @@ void MPU6050_Proc(void)
     vTaskDelay(pdMS_TO_TICKS(5));
 }
 
+void MPU6050_SetWakeLock(uint8_t locked)
+{
+    g_mpu6050_wake_locked = (locked != 0U) ? 1U : 0U;
+}
+
 static void detect_wrist_gesture(void)
 {
+    if (g_mpu6050_wake_locked != 0U) {
+        return;
+    }
+
     // 1. 获取当前时间
     uint32_t current_time = xTaskGetTickCount();
     

@@ -66,8 +66,8 @@ APP side should check:
 - magic is `OTA1`
 - `image_size > 0`
 - `image_size <= 0x20000`
-- `payload_size <= 820`
-- version is allowed
+- `payload_size <= 480`
+- `version >= confirmed_version`; otherwise the device replies with status `8`
 
 After accepting START, the APP should erase download sector 6
 `0x08040000` to `0x0805FFFF`, then ACK START.
@@ -114,7 +114,9 @@ image_size    = app.bin size
 image_crc     = app.bin CRC32
 image_version = firmware version
 boot_count    = 0
-reserved[9]   = 0xFFFFFFFF
+reserved[0]   = confirmed_version
+reserved[1]   = previous_version or 0xFFFFFFFF
+reserved[2..8]= 0xFFFFFFFF
 ```
 
 Then ACK END and call `NVIC_SystemReset()`.

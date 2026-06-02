@@ -1,4 +1,5 @@
 #include "ota_update.h"
+#include "app_version.h"
 #include "boot_shared.h"
 #include "stm32f4xx.h"
 #include "stm32f4xx_flash.h"
@@ -30,6 +31,7 @@
 #define OTA_MAX_PAYLOAD_SIZE        ((uint16_t)480U)
 #define OTA_MAX_DATA_FRAME_SIZE     ((uint16_t)(OTA_DATA_HEADER_LEN + OTA_MAX_PAYLOAD_SIZE + 4U))
 #define OTA_RX_FRAME_TIMEOUT_MS     ((uint32_t)1000U)
+#define OTA_UI_FAILED_HOLD_MS       ((uint32_t)3000U)
 
 typedef enum {
     OTA_RX_IDLE = 0,
@@ -58,6 +60,104 @@ typedef struct {
 static ota_context_t g_ota;
 static volatile uint32_t g_ota_uart_rx_drop_count;
 static volatile uint32_t g_ota_reset_csr;
+static ota_update_status_t g_ota_status;
+static uint8_t g_ota_display_active;
+static TickType_t g_ota_ui_state_tick;
+static ota_update_status_callback_t g_ota_status_callback;
+
+static uint8_t Ota_CalcPercent(uint32_t received_size, uint32_t image_size)
+{
+    uint32_t percent;
+
+    if (image_size == 0U) {
+        return 0U;
+    }
+
+    if (received_size >= image_size) {
+        return 100U;
+    }
+
+    percent = (received_size * 100U) / image_size;
+    if (percent > 100U) {
+        percent = 100U;
+    }
+
+    return (uint8_t)percent;
+}
+
+static void Ota_SetUiState(ota_update_ui_state_t ui_state, uint8_t error_status)
+{
+    g_ota_status.ui_state = ui_state;
+    g_ota_status.image_size = g_ota.image_size;
+    g_ota_status.received_size = g_ota.received_size;
+    g_ota_status.image_version = g_ota.image_version;
+    g_ota_status.percent = Ota_CalcPercent(g_ota.received_size, g_ota.image_size);
+    g_ota_status.error_status = error_status;
+    g_ota_ui_state_tick = xTaskGetTickCount();
+
+    if (ui_state == OTA_UPDATE_UI_REBOOTING) {
+        g_ota_status.received_size = g_ota.image_size;
+        g_ota_status.percent = 100U;
+    }
+
+    g_ota_display_active = (ui_state != OTA_UPDATE_UI_IDLE) ? 1U : 0U;
+
+    if (g_ota_status_callback != 0) {
+        g_ota_status_callback(&g_ota_status);
+    }
+}
+
+static void Ota_ResetContext(uint8_t clear_display)
+{
+    g_ota.rx_state = OTA_RX_IDLE;
+    g_ota.transfer_active = 0U;
+    g_ota.reset_after_ack = 0U;
+    g_ota.rx_index = 0U;
+    g_ota.rx_expected = 0U;
+    g_ota.payload_size = 0U;
+    g_ota.expected_seq = 0U;
+    g_ota.image_size = 0U;
+    g_ota.image_crc = 0U;
+    g_ota.image_version = 0U;
+    g_ota.received_size = 0U;
+    g_ota.last_rx_tick = 0U;
+
+    if (clear_display != 0U) {
+        Ota_SetUiState(OTA_UPDATE_UI_IDLE, OTA_STATUS_OK);
+    }
+}
+
+static void Ota_FailAndReset(uint8_t error_status)
+{
+    Ota_SetUiState(OTA_UPDATE_UI_FAILED, error_status);
+    Ota_ResetContext(0U);
+}
+
+/**
+ * @brief 从 Boot metadata 读取当前已确认版本。
+ * @return 已确认 APP 版本；若 metadata 无效或尚未记录，则返回 APP_FW_VERSION。
+ */
+static uint32_t Ota_GetConfirmedVersion(void)
+{
+    boot_meta_t meta;
+    const volatile uint32_t *src = (const volatile uint32_t *)BOOT_META_ADDR;
+    uint32_t *dst = (uint32_t *)&meta;
+    uint32_t i;
+    uint32_t confirmed_version = APP_FW_VERSION;
+
+    for (i = 0U; i < (sizeof(meta) / sizeof(uint32_t)); ++i) {
+        dst[i] = src[i];
+    }
+
+    if ((meta.magic == BOOT_META_MAGIC) && (meta.version == BOOT_META_VERSION)) {
+        uint32_t stored_version = meta.reserved[BOOT_META_CONFIRMED_VERSION_INDEX];
+        if ((stored_version != 0xFFFFFFFFU) && (stored_version > confirmed_version)) {
+            confirmed_version = stored_version;
+        }
+    }
+
+    return confirmed_version;
+}
 
 /**
  * @brief 从小端格式字节流读取 16 位无符号数。
@@ -217,18 +317,7 @@ static void Ota_BeginCollect(uint8_t frame_type, uint16_t expected_len)
  */
 void Ota_UpdateReset(void)
 {
-    g_ota.rx_state = OTA_RX_IDLE;
-    g_ota.transfer_active = 0U;
-    g_ota.reset_after_ack = 0U;
-    g_ota.rx_index = 0U;
-    g_ota.rx_expected = 0U;
-    g_ota.payload_size = 0U;
-    g_ota.expected_seq = 0U;
-    g_ota.image_size = 0U;
-    g_ota.image_crc = 0U;
-    g_ota.image_version = 0U;
-    g_ota.received_size = 0U;
-    g_ota.last_rx_tick = 0U;
+    Ota_ResetContext(1U);
 }
 
 /**
@@ -275,6 +364,25 @@ uint8_t Ota_UpdateInProgress(void)
     return (uint8_t)((g_ota.rx_state != OTA_RX_IDLE) || (g_ota.transfer_active != 0U));
 }
 
+uint8_t Ota_UpdateDisplayActive(void)
+{
+    return g_ota_display_active;
+}
+
+void Ota_UpdateGetStatus(ota_update_status_t *status)
+{
+    if (status == 0) {
+        return;
+    }
+
+    *status = g_ota_status;
+}
+
+void Ota_UpdateRegisterStatusCallback(ota_update_status_callback_t callback)
+{
+    g_ota_status_callback = callback;
+}
+
 /**
  * @brief 根据当前接收状态获取应答帧类型。
  * @return OTA_FRAME_START、OTA_FRAME_DATA 或 OTA_FRAME_END。
@@ -312,6 +420,11 @@ void Ota_UpdatePoll(void)
     uint8_t ack_type;
     uint16_t ack_seq;
 
+    if ((g_ota_status.ui_state == OTA_UPDATE_UI_FAILED) &&
+        ((uint32_t)((now - g_ota_ui_state_tick) * portTICK_PERIOD_MS) > OTA_UI_FAILED_HOLD_MS)) {
+        Ota_SetUiState(OTA_UPDATE_UI_IDLE, OTA_STATUS_OK);
+    }
+
     if ((g_ota.rx_state != OTA_RX_IDLE) && (g_ota.rx_state != OTA_RX_WAIT_FRAME) &&
         (g_ota.rx_index > 0U) &&
         ((uint32_t)((now - g_ota.last_rx_tick) * portTICK_PERIOD_MS) > OTA_RX_FRAME_TIMEOUT_MS)) {
@@ -320,7 +433,7 @@ void Ota_UpdatePoll(void)
             ack_seq = (ack_type == OTA_FRAME_DATA) ? g_ota.expected_seq : 0U;
             Ota_SendAck(ack_type, OTA_STATUS_RX_TIMEOUT, ack_seq, g_ota.received_size);
         }
-        Ota_PrepareForNextFrame();
+        Ota_FailAndReset(OTA_STATUS_RX_TIMEOUT);
     }
 }
 
@@ -414,6 +527,7 @@ static int Ota_WriteBootMeta(void)
     boot_meta_t meta;
     const uint32_t *src = (const uint32_t *)&meta;
     uint32_t i;
+    uint32_t confirmed_version = Ota_GetConfirmedVersion();
     FLASH_Status status = FLASH_COMPLETE;
 
     meta.magic = BOOT_META_MAGIC;
@@ -426,6 +540,7 @@ static int Ota_WriteBootMeta(void)
     for (i = 0U; i < 9U; ++i) {
         meta.reserved[i] = 0xFFFFFFFFU;
     }
+    meta.reserved[BOOT_META_CONFIRMED_VERSION_INDEX] = confirmed_version;
 
     FLASH_Unlock();
     FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |
@@ -447,7 +562,7 @@ static int Ota_WriteBootMeta(void)
 
 /**
  * @brief 处理 OTA 起始帧并初始化一次升级传输。
- * 检查 magic 是否为 "OTA1"、固件大小是否合法、payload 大小是否合法，然后擦除下载区 
+ * 检查 magic 是否为 "OTA1"、固件大小是否合法、payload 大小是否合法，然后擦除下载区
  * BOOT_DOWNLOAD_ADDR = 0x08040000，也就是 Sector 6。成功后设置 transfer_active = 1，回复 ACK。
  */
 static void Ota_HandleStartFrame(void)
@@ -462,31 +577,41 @@ static void Ota_HandleStartFrame(void)
         (g_ota.rx_buf[3] != (uint8_t)'A') ||
         (g_ota.rx_buf[4] != (uint8_t)'1')) {
         Ota_SendAck(OTA_FRAME_START, OTA_STATUS_BAD_MAGIC, 0U, 0U);
-        Ota_UpdateReset();
+        Ota_FailAndReset(OTA_STATUS_BAD_MAGIC);
         return;
     }
+
+    g_ota.image_size = image_size;
+    g_ota.image_crc = image_crc;
+    g_ota.image_version = image_version;
+    g_ota.received_size = 0U;
 
     if ((image_size == 0U) || (image_size > BOOT_DOWNLOAD_SIZE) || (image_size > BOOT_APP_SIZE) ||
         (payload_size == 0U) || (payload_size > OTA_MAX_PAYLOAD_SIZE)) {
         Ota_SendAck(OTA_FRAME_START, OTA_STATUS_BAD_SIZE, 0U, 0U);
-        Ota_UpdateReset();
+        Ota_FailAndReset(OTA_STATUS_BAD_SIZE);
         return;
     }
 
+    if (image_version < Ota_GetConfirmedVersion()) {
+        Ota_SendAck(OTA_FRAME_START, OTA_STATUS_VERSION_REJECTED, 0U, image_version);
+        Ota_FailAndReset(OTA_STATUS_VERSION_REJECTED);
+        return;
+    }
+
+    Ota_SetUiState(OTA_UPDATE_UI_RECEIVING, OTA_STATUS_OK);
+
     if (!Ota_EraseDownloadArea()) {
         Ota_SendAck(OTA_FRAME_START, OTA_STATUS_FLASH_FAILED, 0U, 0U);
-        Ota_UpdateReset();
+        Ota_FailAndReset(OTA_STATUS_FLASH_FAILED);
         return;
     }
 
     g_ota.transfer_active = 1U;
     g_ota.payload_size = payload_size;
     g_ota.expected_seq = 0U;
-    g_ota.image_size = image_size;
-    g_ota.image_crc = image_crc;
-    g_ota.image_version = image_version;
-    g_ota.received_size = 0U;
     g_ota.rx_state = OTA_RX_WAIT_FRAME;
+    Ota_SetUiState(OTA_UPDATE_UI_RECEIVING, OTA_STATUS_OK);
 
     Ota_SendAck(OTA_FRAME_START, OTA_STATUS_OK, 0U, Ota_UpdateGetResetCsr());
 }
@@ -549,13 +674,14 @@ static void Ota_HandleDataFrame(void)
     /* 校验全部通过后，将 payload 写入下载区；Flash 写失败需要终止本次 OTA。 */
     if (!Ota_WriteDownloadBytes(offset, payload, len)) {
         Ota_SendAck(OTA_FRAME_DATA, OTA_STATUS_FLASH_FAILED, seq, g_ota.received_size);
-        Ota_UpdateReset();              /* 重置 OTA 更新状态 */
+        Ota_FailAndReset(OTA_STATUS_FLASH_FAILED);
         return;
     }
 
     /* 更新接收进度和下一帧期望序号，然后释放当前帧缓冲状态。 */
     g_ota.received_size = next_offset;
     g_ota.expected_seq = (uint16_t)(g_ota.expected_seq + 1U);
+    Ota_SetUiState(OTA_UPDATE_UI_RECEIVING, OTA_STATUS_OK);
     Ota_PrepareForNextFrame();
 
     /* 最后回 ACK，offset 字段带上当前累计接收字节数。 */
@@ -573,32 +699,34 @@ static void Ota_HandleEndFrame(void)
     if ((image_size != g_ota.image_size) || (image_crc != g_ota.image_crc) ||
         (g_ota.received_size != g_ota.image_size)) {
         Ota_SendAck(OTA_FRAME_END, OTA_STATUS_BAD_SIZE, 0U, g_ota.received_size);
-        Ota_PrepareForNextFrame();
+        Ota_FailAndReset(OTA_STATUS_BAD_SIZE);
         return;
     }
 
+    Ota_SetUiState(OTA_UPDATE_UI_VERIFYING, OTA_STATUS_OK);
     Ota_FlushFlashCache();
 
     if (Ota_Crc32Flash(BOOT_DOWNLOAD_ADDR, g_ota.image_size) != g_ota.image_crc) {
         Ota_SendAck(OTA_FRAME_END, OTA_STATUS_IMAGE_CRC_FAILED, 0U, g_ota.received_size);
-        Ota_PrepareForNextFrame();
+        Ota_FailAndReset(OTA_STATUS_IMAGE_CRC_FAILED);
         return;
     }
 
     if (!Ota_DownloadVectorIsValid()) {
         Ota_SendAck(OTA_FRAME_END, OTA_STATUS_BAD_SIZE, 0U, g_ota.received_size);
-        Ota_PrepareForNextFrame();
+        Ota_FailAndReset(OTA_STATUS_BAD_SIZE);
         return;
     }
 
     if (!Ota_WriteBootMeta()) {
         Ota_SendAck(OTA_FRAME_END, OTA_STATUS_FLASH_FAILED, 0U, g_ota.received_size);
-        Ota_UpdateReset();
+        Ota_FailAndReset(OTA_STATUS_FLASH_FAILED);
         return;
     }
 
+    Ota_SetUiState(OTA_UPDATE_UI_REBOOTING, OTA_STATUS_OK);
     Ota_SendAck(OTA_FRAME_END, OTA_STATUS_OK, 0U, g_ota.image_size);
-    vTaskDelay(pdMS_TO_TICKS(200));
+    vTaskDelay(pdMS_TO_TICKS(500));
     NVIC_SystemReset();
 }
 
@@ -714,4 +842,22 @@ uint8_t Ota_UpdateFeedByte(uint8_t byte)
     }
 
     return 1U;
+}
+
+uint16_t Ota_UpdateFeedBuffer(const uint8_t *data, uint16_t len)
+{
+    uint16_t consumed = 0U;
+
+    if (data == 0) {
+        return 0U;
+    }
+
+    while (consumed < len) {
+        if (Ota_UpdateFeedByte(data[consumed]) == 0U) {
+            break;
+        }
+        ++consumed;
+    }
+
+    return consumed;
 }

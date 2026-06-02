@@ -1,0 +1,9 @@
+*** Using Compiler 'V5.06 update 5 (build 528)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'Bootloader Target'
+compiling boot_main.c...
+linking...
+Program Size: Code=1884 RO-data=424 RW-data=0 ZI-data=1024  
+FromELF: creating hex file...
+After Build - User command #1: fromelf --bin --output=.\Objects\Bootloader\bootloader.bin .\Objects\Bootloader\bootloader.axf
+".\Objects\Bootloader\bootloader.axf" - 0 Error(s), 0 Warning(s).
+Build Time Elapsed:  00:00:02

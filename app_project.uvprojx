@@ -82,9 +82,9 @@
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
-            <RunUserProg2>0</RunUserProg2>
+            <RunUserProg2>1</RunUserProg2>
             <UserProg1Name>fromelf --bin --output=.\Objects\APP\app.bin .\Objects\APP\app.axf</UserProg1Name>
-            <UserProg2Name></UserProg2Name>
+            <UserProg2Name>python .\Bootloader\make_update_package.py</UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
             <nStopA1X>0</nStopA1X>
@@ -934,6 +934,11 @@
               <FileName>hi2c.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\User\hi2c.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_version.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\User\app_version.h</FilePath>
             </File>
           </Files>
         </Group>

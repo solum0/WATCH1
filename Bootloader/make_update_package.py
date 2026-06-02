@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import binascii
+import re
 import struct
 from pathlib import Path
 
@@ -11,6 +12,21 @@ BOOT_DOWNLOAD_ADDR = 0x08040000
 BOOT_META_MAGIC = 0x42545731
 BOOT_META_VERSION = 0x00000001
 BOOT_FLAG_UPDATE_PENDING = 0xA55A0001
+
+
+def read_app_version(header_path):
+    text = header_path.read_text(encoding="utf-8")
+    values = {}
+
+    for name in ("APP_FW_VERSION_MAJOR", "APP_FW_VERSION_MINOR", "APP_FW_VERSION_PATCH"):
+        match = re.search(rf"#define\s+{name}\s+([0-9A-Fa-fx]+)U?", text)
+        if not match:
+            raise ValueError(f"Cannot find {name} in {header_path}")
+        values[name] = int(match.group(1), 0)
+
+    return ((values["APP_FW_VERSION_MAJOR"] << 16) |
+            (values["APP_FW_VERSION_MINOR"] << 8) |
+            values["APP_FW_VERSION_PATCH"])
 
 
 def intel_hex_record(addr, record_type, data):
@@ -61,7 +77,10 @@ def main():
     parser = argparse.ArgumentParser(description="Build bootloader update metadata and HEX.")
     parser.add_argument("--app", default="Objects/APP/app.bin", help="APP bin path")
     parser.add_argument("--out-dir", default="Objects/Update", help="Output directory")
-    parser.add_argument("--version", type=lambda x: int(x, 0), default=1, help="Image version")
+    parser.add_argument("--version", type=lambda x: int(x, 0), default=None,
+                        help="Image version. Defaults to User/app_version.h")
+    parser.add_argument("--version-header", default="User/app_version.h",
+                        help="APP version header path")
     args = parser.parse_args()
 
     app_path = Path(args.app)
@@ -69,7 +88,10 @@ def main():
     out_dir.mkdir(parents=True, exist_ok=True)
 
     app_data = app_path.read_bytes()
-    meta_data, image_crc = make_meta(app_data, args.version)
+    image_version = args.version
+    if image_version is None:
+        image_version = read_app_version(Path(args.version_header))
+    meta_data, image_crc = make_meta(app_data, image_version)
 
     meta_path = out_dir / "app_meta.bin"
     download_bin_path = out_dir / "app_download.bin"
@@ -86,6 +108,7 @@ def main():
     )
 
     print(f"APP: {app_path}")
+    print(f"version: 0x{image_version:08X}")
     print(f"size: {len(app_data)} bytes")
     print(f"crc32: 0x{image_crc:08X}")
     print(f"meta: {meta_path} @ 0x{BOOT_META_ADDR:08X}")

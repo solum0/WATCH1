@@ -16,6 +16,7 @@
 // 全局变量定义
 uint8_t EXTI_IRQ_KEY = 0;             // 存储中断触发的按键编号
 volatile uint8_t KeyPressed = 0;      // 按键按下标志位（volatile防止编译器优化）
+static volatile uint8_t g_key_sleep_locked = 0U;
 extern volatile uint8_t max30102_int_triggered;
 extern uint8_t bell_onoff;
 extern void MOTOR_GPIO_ON(void);
@@ -263,10 +264,19 @@ void EXTI0_IRQHandler(void)
 //     }
 // }
 
+void Key_SetSleepLock(uint8_t locked)
+{
+    g_key_sleep_locked = (locked != 0U) ? 1U : 0U;
+}
+
 //wk-up PA0		
 void sleep_timer_callback(TimerHandle_t xTimer)
 {
 		uint8_t current_state = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0);
+		if (g_key_sleep_locked != 0U) {
+			return;
+		}
+
 		if(current_state == SET)
 		{	 
       OLED_WriteCommand(0xAE);	//设置显示开启/关闭，0xAE关闭，0xAF开启

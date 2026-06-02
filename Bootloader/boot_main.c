@@ -221,6 +221,17 @@ static int Boot_ImageMatches(uint32_t addr, uint32_t size, uint32_t expected_crc
     return Boot_CalcCrc32(addr, size) == expected_crc;
 }
 
+static int Boot_ImageVersionIsAllowed(const boot_meta_t *meta)
+{
+    uint32_t confirmed_version = meta->reserved[BOOT_META_CONFIRMED_VERSION_INDEX];
+
+    if (confirmed_version == 0xFFFFFFFFU) {
+        confirmed_version = 0U;
+    }
+
+    return meta->image_version >= confirmed_version;
+}
+
 /* 安装新固件前先备份当前 APP。
  * 如果当前 APP 本身无效，则只清空备份区并继续安装新固件。
  */
@@ -242,9 +253,17 @@ static int Boot_BackupCurrentApp(void)
  */
 static int Boot_InstallDownloadedImage(boot_meta_t *meta)
 {
+    uint32_t previous_confirmed_version;
+
+    if (!Boot_ImageVersionIsAllowed(meta)) {
+        return 0;
+    }
+
     if (!Boot_ImageMatches(BOOT_DOWNLOAD_ADDR, meta->image_size, meta->image_crc)) {
         return 0;
     }
+
+    previous_confirmed_version = meta->reserved[BOOT_META_CONFIRMED_VERSION_INDEX];
 
     if (!Boot_BackupCurrentApp()) {
         return 0;
@@ -270,6 +289,7 @@ static int Boot_InstallDownloadedImage(boot_meta_t *meta)
     /* 新 APP 首次启动必须由 APP 侧调用 AppBoot_ConfirmIfTrial() 确认。 */
     meta->state = BOOT_FLAG_TRIAL;
     meta->boot_count = 0U;
+    meta->reserved[BOOT_META_PREVIOUS_VERSION_INDEX] = previous_confirmed_version;
     return Boot_WriteMeta(meta);
 }
 
@@ -292,6 +312,10 @@ static int Boot_RestoreBackup(boot_meta_t *meta)
 
     meta->state = BOOT_FLAG_ROLLBACK;
     meta->boot_count = 0U;
+    if (meta->reserved[BOOT_META_PREVIOUS_VERSION_INDEX] != 0xFFFFFFFFU) {
+        meta->reserved[BOOT_META_CONFIRMED_VERSION_INDEX] =
+            meta->reserved[BOOT_META_PREVIOUS_VERSION_INDEX];
+    }
     return Boot_WriteMeta(meta);
 }
 

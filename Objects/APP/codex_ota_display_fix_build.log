@@ -1,0 +1,19 @@
+*** Using Compiler 'V5.06 update 5 (build 528)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'APP Target'
+compiling boot_confirm.c...
+compiling ota_update.c...
+compiling main.c...
+linking...
+Program Size: Code=41288 RO-data=6708 RW-data=464 ZI-data=46264  
+FromELF: creating hex file...
+After Build - User command #1: fromelf --bin --output=.\Objects\APP\app.bin .\Objects\APP\app.axf
+After Build - User command #2: python .\Bootloader\make_update_package.py
+APP: Objects\APP\app.bin
+version: 0x00000307
+size: 48040 bytes
+crc32: 0x728403A0
+meta: Objects\Update\app_meta.bin @ 0x08010000
+download bin: Objects\Update\app_download.bin @ 0x08040000
+update hex: Objects\Update\app_update.hex
+".\Objects\APP\app.axf" - 0 Error(s), 0 Warning(s).
+Build Time Elapsed:  00:00:02

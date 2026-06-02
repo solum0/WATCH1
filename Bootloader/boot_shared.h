@@ -48,6 +48,9 @@
 #define BOOT_FLAG_CONFIRMED       ((uint32_t)0xA55A0003U)
 #define BOOT_FLAG_ROLLBACK        ((uint32_t)0xA55A0004U)
 
+#define BOOT_META_CONFIRMED_VERSION_INDEX  0U
+#define BOOT_META_PREVIOUS_VERSION_INDEX   1U
+
 /* Bootloader、APP、打包脚本共享的元数据格式，必须保持字段顺序和大小一致。 */
 typedef struct {
     uint32_t magic;         /* 固定为 BOOT_META_MAGIC，用于判断元数据是否有效。 */
@@ -55,9 +58,9 @@ typedef struct {
     uint32_t state;         /* 当前升级状态，取 BOOT_FLAG_xxx。 */
     uint32_t image_size;    /* 下载区有效固件长度，单位字节。 */
     uint32_t image_crc;     /* 下载固件 CRC32，用于安装前后校验。 */
-    uint32_t image_version; /* APP 版本号，当前 Bootloader 只保存不参与判断。 */
+    uint32_t image_version; /* 候选 APP 版本号，本次 OTA 准备安装的固件版本。 */
     uint32_t boot_count;    /* TRIAL 状态下累计启动次数，超限则回滚。 */
-    uint32_t reserved[9];   /* 预留字段，保证结构体固定 64 字节。 */
+    uint32_t reserved[9];   /* [0] 已确认版本，[1] 上一个版本，其余预留，结构体固定 64 字节。 */
 } boot_meta_t;
 
 #endif
